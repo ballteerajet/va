@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css?family=Dosis:800|Lobster|Pacifico" rel="stylesheet">
+
+<!-- jQuery + d3 + GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+
+<style>
+body{
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
+#canvas{
+  background: #ff93a6;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.o_heart{ fill: #FFB3C3; }
+.i_heart{ fill: #FCE3E9; }
+
+.valentine-btn{
+  z-index: 1000;
+  position: absolute;
+  font-size: 3em;
+  letter-spacing: 2px;
+  font-family: 'Dosis';
+  font-weight: bold;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #FFB3C3;
+  background: white;
+  padding: 15px 30px;
+  border-radius: 10px;
+  border: 3px solid #FCE3E9;
+  box-shadow: 0 5px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.valentine-btn:hover{
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.result-img{
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+</style>
+</head>
+
+<body>
+
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" id="canvas">
+  <defs>
+    <g id="heart">
+      <path class="o_heart" d="M102.7,12.4C90.5,0.2,71.3-1,57.7,8.8C44.1-1.1,24.8,0.1,12.5,12.3c-13.6,13.6-13.6,35.8,0,49.3L48.8,98
+      c1.8,1.8,4,2.9,6.3,3.3c3.9,0.9,8.2-0.1,11.2-3.2l36.3-36.3C116.2,48.2,116.2,26,102.7,12.4z"/>
+      <path class="i_heart" d="M74.7,34c-4.6-4.6-11.9-5.1-17.1-1.4c-5.2-3.8-12.5-3.3-17.1,1.3c-5.1,5.1-5.1,13.6,0,18.7l13.8,13.8
+      c0.7,0.7,1.5,1.1,2.4,1.3c1.5,0.3,3.1-0.1,4.2-1.2l13.8-13.8C79.9,47.6,79.9,39.2,74.7,34z"/>
+    </g>
+  </defs>
+</svg>
+
+<button class="valentine-btn" id="loveBtn">กดปุ่มนี้</button>
+
+<img src="flower.png" 
+     class="result-img" 
+     id="resultImage">
+
+<script>
+var paper = d3.select("#canvas");
+var wsvg = $("#canvas").width();
+var hsvg = $("#canvas").height();
+var count = 0;
+
+function spawnHeart(){
+  var x = Math.floor(Math.random() * (wsvg-100)) + 50;
+  var y = Math.floor(Math.random() * (hsvg-100)) + 50;
+  count++;
+  var heart = paper.append("use")
+    .attr("xlink:href", "#heart")
+    .attr("id", "h"+count)
+    .attr("transform", "translate("+x+","+y+")");
+
+  var s = (Math.random() * 0.5 + 0.5).toFixed(1);
+  var tl = new TimelineMax({repeat:1, yoyo:true});
+  tl.from("#h"+count, 0.7, {scale:0, transformOrigin:"50% 50%"})
+    .to("#h"+count, 0.7, {scale:s, transformOrigin:"50% 50%"})
+    .to("#h"+count, 0.3, {scale:1, opacity:0});
+
+  setTimeout(function(){
+    heart.remove();
+  },1700);
+}
+
+setInterval(spawnHeart, 800);
+
+$("#loveBtn").click(function(){
+  $(this).fadeOut(500);
+  $("#resultImage").fadeIn(800);
+});
+
+$(window).on("resize", function(){
+  wsvg = $("#canvas").width();
+  hsvg = $("#canvas").height();
+});
+</script>
+
+</body>
+</html>
